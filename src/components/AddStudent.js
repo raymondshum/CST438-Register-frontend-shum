@@ -13,10 +13,13 @@ import Cookies from "js-cookie";
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { SERVER_URL } from "../constants";
+import StudentCreatedSuccess from "./StudentCreatedSuccess"
 
 function AddStudent() {
+  const [studentAdded, setStudentAdded] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [open, setOpen] = useState(false);
+  const [returnedStudent, setReturnedStudent] = useState("");
   const [studentInfo, setStudentInfo] = useState({
     studentName: "",
     studentEmail: "",
@@ -31,7 +34,7 @@ function AddStudent() {
     setEmailError(false);
     setStudentInfo({
       studentName: "",
-      studentEmail: ""
+      studentEmail: "",
     })
   };
 
@@ -63,17 +66,19 @@ function AddStudent() {
       },
       body: JSON.stringify(studentInfo),
     });
-
+    const data = await response.json();
     if (response.ok) {
       toast.success(`Student has been added: ${studentInfo.studentName ? studentInfo.studentName : studentInfo.studentEmail}`, {
         position: toast.POSITION.BOTTOM_LEFT,
       });
-      console.log(studentInfo)
+      setReturnedStudent(data);
+      setStudentAdded(true);
     } else {
-      const data = await response.json();
       toast.error(`Error: ${data.message}`, {
         position: toast.POSITION.BOTTOM_LEFT,
       });
+      setReturnedStudent({});
+      setStudentAdded(false);
     }
   };
 
@@ -91,6 +96,7 @@ function AddStudent() {
           </Typography>
         </Toolbar>
       </AppBar>
+      {studentAdded && <StudentCreatedSuccess returnedStudent={returnedStudent}/>}
       <Button
         variant="outlined"
         color="primary"
