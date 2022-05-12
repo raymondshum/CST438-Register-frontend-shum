@@ -7,7 +7,6 @@ import Semester from './components/Semester';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import AddStudentButton from './components/AddStudentButton';
 import AddStudentPage from './components/AddStudentPage';
-import StudentCreatedSuccess from './components/StudentCreatedSuccess';
 
 function App() {
   return (
@@ -27,7 +26,6 @@ function App() {
         </Route>
         <Route path='/schedule' component={SchedList} />
         <Route path='/addStudent' component={AddStudentPage} />
-        <Route path='/addStudentSuccess' component={StudentCreatedSuccess} />
        </Switch>
       </BrowserRouter>
     </div>
