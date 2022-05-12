@@ -28,6 +28,12 @@
   color: #61dafb;
 }
 
+#AddStudentPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
