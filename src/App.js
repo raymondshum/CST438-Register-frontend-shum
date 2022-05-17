@@ -5,6 +5,8 @@ import Typography from '@mui/material/Typography';
 import SchedList from './components/SchedList';
 import Semester from './components/Semester';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
+import AddStudentButton from './components/AddStudentButton';
+import AddStudentPage from './components/AddStudentPage';
 
 function App() {
   return (
@@ -18,8 +20,12 @@ function App() {
       </AppBar>
       <BrowserRouter>
        <Switch>
-        <Route exact path='/' component={Semester} />
+        <Route exact path ='/'>
+          <AddStudentButton />
+          <Semester />
+        </Route>
         <Route path='/schedule' component={SchedList} />
+        <Route path='/addStudent' component={AddStudentPage} />
        </Switch>
       </BrowserRouter>
     </div>
