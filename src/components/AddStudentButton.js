@@ -8,7 +8,7 @@ function AddStudentButton() {
   return (
     <div>
       <Link to="/addStudent">
-        <Button sx={{m:2}} variant="outlined">
+        <Button id="addStudentButton" sx={{m:2}} variant="outlined">
           Add Student
         </Button>
       </Link>

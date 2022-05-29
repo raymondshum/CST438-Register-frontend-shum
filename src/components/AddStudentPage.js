@@ -119,7 +119,7 @@ function AddStudentPage() {
         label="Email(*)"
         sx={{"width": "70ch"}}
       />
-      <Button onClick={handleAdd}>Submit</Button>
+      <Button id="submitStudentButton" onClick={handleAdd}>Submit</Button>
       <ToastContainer autoClose={3000} />
     </div>
   );
