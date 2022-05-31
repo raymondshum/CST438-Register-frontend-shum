@@ -32,13 +32,19 @@ class SchedList extends Component {
   }
   
   fetchCourses = () => {
+
+    if(!this.props.location.student) {
+      return;
+    }
+
     console.log("SchedList.fetchCourses");
     const token = Cookies.get('XSRF-TOKEN');
     
     fetch(`${SERVER_URL}/schedule?year=${this.props.location.year}&semester=${this.props.location.semester}`, 
       {  
         method: 'GET', 
-        headers: { 'X-XSRF-TOKEN': token }
+        headers: { 'X-XSRF-TOKEN': token },
+        credentials: 'include'
       } )
     .then((response) => {
       console.log("FETCH RESP:"+response);
@@ -65,13 +71,19 @@ class SchedList extends Component {
 
   // Drop Course 
   onDelClick = (id) => {
+
+    if(!this.props.location.student) {
+      return;
+    }
+
     if (window.confirm('Are you sure you want to drop the course?')) {
       const token = Cookies.get('XSRF-TOKEN');
       
       fetch(`${SERVER_URL}/schedule/${id}`,
         {
           method: 'DELETE',
-          headers: { 'X-XSRF-TOKEN': token }
+          headers: { 'X-XSRF-TOKEN': token },
+          credentials: 'include'
         })
     .then(res => {
         if (res.ok) {
@@ -96,13 +108,19 @@ class SchedList extends Component {
 
   // Add course
   addCourse = (course) => {
+
+    if(!this.props.location.student) {
+      return;
+    }
+
     const token = Cookies.get('XSRF-TOKEN');
  
     fetch(`${SERVER_URL}/schedule`,
       { 
         method: 'POST', 
         headers: { 'Content-Type': 'application/json',
-                   'X-XSRF-TOKEN': token  }, 
+                   'X-XSRF-TOKEN': token  },
+        credentials: 'include',
         body: JSON.stringify(course)
       })
     .then(res => {
@@ -152,7 +170,7 @@ class SchedList extends Component {
       }
       ];
   
-  return(
+  return this.props.location.student ? (
       <div>
           <AppBar position="static" color="default">
             <Toolbar>
@@ -179,6 +197,10 @@ class SchedList extends Component {
             <ToastContainer autoClose={1500} />   
           </div>
       </div>
+      ) : (
+        <div>
+          <h1>Only a student can view and modify their own schedule.</h1>
+        </div>
       ); 
   }
 }

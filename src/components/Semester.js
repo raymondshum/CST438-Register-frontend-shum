@@ -7,15 +7,39 @@ import Button from '@mui/material/Button';
 import Radio from '@mui/material/Radio';
 import {DataGrid} from '@mui/x-data-grid';
 import {SEMESTER_LIST} from '../constants.js'
+import Cookies from 'js-cookie';
+import {SERVER_URL} from '../constants.js'
 
 // user selects from a list of  (year, semester) values
 class Semester extends Component {
     constructor(props) {
       super(props);
-      this.state = {selected: SEMESTER_LIST.length-1 };
+      this.state = {
+        isStudent: false,
+        selected: SEMESTER_LIST.length-1 
+      };
     }
- 
-   onRadioClick = (event) => {
+
+  componentDidMount() {
+    this.isStudent();
+  }
+    
+  isStudent = async () => {
+    const token = Cookies.get("XSRF-TOKEN");
+    const response = await fetch(`${SERVER_URL}/student`, {
+      method: "GET",
+      headers: {
+        "X-XSRF-TOKEN": token,
+      },
+      credentials: 'include'
+    });
+    
+    if (response.ok) {
+      this.setState({ isStudent: true})
+    }
+  }
+
+  onRadioClick = (event) => {
     console.log("Semester.onRadioClick "+JSON.stringify(event.target.value));
     this.setState({selected: event.target.value});
   }
@@ -42,7 +66,7 @@ class Semester extends Component {
       { field: 'name', headerName: 'Semester', width: 200 }
       ];       
        
-    return (
+    return this.state.isStudent && (
        <div>
          <AppBar position="static" color="default">
             <Toolbar>
@@ -58,7 +82,8 @@ class Semester extends Component {
               <Button component={Link} 
                       to={{pathname:'/schedule' , 
                       year:SEMESTER_LIST[this.state.selected].year, 
-                      semester:SEMESTER_LIST[this.state.selected].name}} 
+                      semester:SEMESTER_LIST[this.state.selected].name,
+                      student:this.state.isStudent}} 
                 variant="outlined" color="primary" style={{margin: 10}}>
                 Get Schedule
               </Button>
