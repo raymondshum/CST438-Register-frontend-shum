@@ -7,6 +7,7 @@ import Semester from './components/Semester';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import AddStudentButton from './components/AddStudentButton';
 import AddStudentPage from './components/AddStudentPage';
+import Login from './components/Login';
 
 function App() {
   return (
@@ -20,10 +21,12 @@ function App() {
       </AppBar>
       <BrowserRouter>
        <Switch>
-        <Route exact path ='/'>
-          <AddStudentButton />
-          <Semester />
-        </Route>
+        <Route exact path='/' component={Login} />
+        <Route exact path='/semester' render={props => 
+          <>
+            <AddStudentButton />
+            <Semester />
+          </>} />
         <Route path='/schedule' component={SchedList} />
         <Route path='/addStudent' component={AddStudentPage} />
        </Switch>

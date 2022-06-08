@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import Cookies from "js-cookie";
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { SERVER_URL } from "../constants";
 import StudentCreatedSuccess from "./StudentCreatedSuccess";
@@ -20,7 +21,15 @@ function AddStudentPage() {
     studentEmail: "",
   });
 
+  const location = useLocation();
+  const isAdmin = location.state === undefined ? false : location.state.admin;
+  
   const addStudent = async (studentInfo) => {
+
+    if(!isAdmin) {
+      return;
+    }
+
     const token = Cookies.get("XSRF-TOKEN");
     const response = await fetch(`${SERVER_URL}/student`, {
       method: "POST",
@@ -28,6 +37,7 @@ function AddStudentPage() {
         "X-XSRF-TOKEN": token,
         "Content-Type": "application/json",
       },
+      credentials: 'include',
       body: JSON.stringify(studentInfo),
     });
     const data = await response.json();
@@ -87,7 +97,7 @@ function AddStudentPage() {
     return /.+@.+\.[A-Za-z]+$/.test(emailAddress);
   };
 
-  return (
+  return isAdmin ? (
     <div id="AddStudentPage">
       <AppBar position="static" color="default">
         <Toolbar>
@@ -121,6 +131,10 @@ function AddStudentPage() {
       />
       <Button id="submitStudentButton" onClick={handleAdd}>Submit</Button>
       <ToastContainer autoClose={3000} />
+    </div>
+  ) : (
+    <div>
+      <h1>Only administrators can add new students to the system.</h1>
     </div>
   );
 }
